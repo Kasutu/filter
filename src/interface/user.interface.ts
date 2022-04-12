@@ -8,13 +8,13 @@ export default interface User {
     last: string;
   };
   course: string;
-  yearLevel: string;
+  yearLevel: 1 | 2 | 3 | 4;
   gender: gender;
-  phoneNumber: number;
+  phoneNumber: string;
   email: string;
   age: number;
   organization: {
-    name: string | null;
+    id: string | null;
     position: OrgPosition | null;
   };
 }
