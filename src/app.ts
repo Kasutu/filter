@@ -1,10 +1,8 @@
-import dateParser from './util/dateParser.util';
-import EventData from './dummyData/event.dummy';
-import randomDuration from './util/randomDuration.util';
+import EventList from './db/eventList.db';
+import UserList from './db/usersList.db';
 
-const eventProp = new EventData();
+const events = new EventList();
+const users = new UserList();
 
-const list = dateParser(eventProp.dates, 'both', 'arr');
-
-console.log('Done Parsing...');
-console.log(randomDuration(list));
+console.log(events.get());
+console.log(users.get());

@@ -24,7 +24,7 @@ export default function randomDuration(list: any): Duration {
 
     if (
       (end.day === start.day && end.month === start.month) ||
-      (start.day < end.day && start.month < end.month)
+      (start.day > end.day && start.month > end.month)
     ) {
       end = getRandom(dateList);
     } else {
@@ -62,8 +62,8 @@ export default function randomDuration(list: any): Duration {
 
     if (
       (end.day === start.day && end.month === start.month) ||
-      (start.day < end.day && start.month < end.month) ||
-      end.hours % 12 < start.hours % 12
+      (start.day > end.day && start.month > end.month) ||
+      end.hours % 12 > start.hours % 12
     ) {
       end = getRandom(dateAndTimeList);
     } else {
