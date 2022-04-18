@@ -8,13 +8,13 @@ export default function randomDuration(dateList: Date[]): Duration;
 export default function randomDuration(TimeList: Time[]): Duration;
 export default function randomDuration(dateAndTime: DateAndTime[]): Duration;
 
-export default function randomDuration(list: any[]): Duration {
+export default function randomDuration(list: any): Duration {
   let tempDuration: Duration = {
     start: 'none',
     end: 'none',
   };
 
-  if (findPropIn('year', list)) {
+  if (findPropIn('year', list[0])) {
     // date format
     const dateList: Date[] = list;
 
@@ -22,7 +22,10 @@ export default function randomDuration(list: any[]): Duration {
     let start: Date = getRandom(dateList);
     let end: Date = getRandom(dateList);
 
-    if (end.day === start.day || start.day < end.day) {
+    if (
+      (end.day === start.day && end.month === start.month) ||
+      (start.day < end.day && start.month < end.month)
+    ) {
       end = getRandom(dateList);
     } else {
       tempDuration.start = start;
@@ -30,7 +33,7 @@ export default function randomDuration(list: any[]): Duration {
     }
 
     return tempDuration;
-  } else if (findPropIn('hours', list)) {
+  } else if (findPropIn('hours', list[0])) {
     // time format
     const timeList: Time[] = list;
 
@@ -49,7 +52,7 @@ export default function randomDuration(list: any[]): Duration {
     tempDuration.end = end;
 
     return tempDuration;
-  } else if (findPropIn('hours', list) && findPropIn('year', list)) {
+  } else if (findPropIn('hours', list[0]) && findPropIn('year', list[0])) {
     // date & time format
     const dateAndTimeList: DateAndTime[] = list;
 
@@ -57,7 +60,11 @@ export default function randomDuration(list: any[]): Duration {
     let start: DateAndTime = getRandom(dateAndTimeList);
     let end: DateAndTime = getRandom(dateAndTimeList);
 
-    if (end.day === start.day || start.day < end.day) {
+    if (
+      (end.day === start.day && end.month === start.month) ||
+      (start.day < end.day && start.month < end.month) ||
+      end.hours % 12 < start.hours % 12
+    ) {
       end = getRandom(dateAndTimeList);
     } else {
       tempDuration.start = start;

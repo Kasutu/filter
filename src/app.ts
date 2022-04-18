@@ -1,9 +1,10 @@
-import randomDuration from './util/randomDuration.util';
-import dateParser, { getDateAndTime } from './util/dateParser.util';
-import getRandom from './util/functions.util';
+import dateParser from './util/dateParser.util';
 import EventData from './dummyData/event.dummy';
-import DateAndTime from './interface/dateAndTime.interface';
+import randomDuration from './util/randomDuration.util';
 
 const eventProp = new EventData();
 
-console.log(randomDuration(getDateAndTime('array', eventProp.dates)));
+const list = dateParser(eventProp.dates, 'both', 'arr');
+
+console.log('Done Parsing...');
+console.log(randomDuration(list));

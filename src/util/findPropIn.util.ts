@@ -1,3 +1,3 @@
-export default function findPropIn(prop: string, interfaceName: any): boolean {
-  return prop in interfaceName;
+export default function findPropIn(prop: string, obj: any): boolean {
+  return obj[prop] !== undefined;
 }
