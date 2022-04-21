@@ -1,48 +1,37 @@
 import Event from '../interface/event.interface';
-import getRandom from '../util/functions.util';
-import UserList from './usersList.db';
 import EventData from '../dummyData/event.dummy';
-import randomDuration from '../util/randomDuration.util';
-import dateParser from '../util/dateParser.util';
+import RandomDuration from '../util/randomDuration.util';
+import DateParser from '../util/dateParser.util';
 import DateAndTime from '../interface/dateAndTime.interface';
+import GetRandom from '../util/getRandom.util';
 
-const EventProp = new EventData();
+const { getRandom } = new GetRandom();
+const { dateParser } = new DateParser();
+const duration = new RandomDuration();
+const { id, dates, name, type, venue } = new EventData();
+export default class EventList {
+  protected data: Event[] = [];
 
-export default class EventList extends UserList {
-  protected data: any[] | null;
-
-  constructor() {
-    super();
-    this.data = null;
-    this.makeData(5);
-  }
-
-  protected override makeData(qty: number): void {
-    this.data = [];
-    const tempArr = [];
+  public makeData(qty: number): void {
+    const tempArr: Event[] = [];
+    const timeList: DateAndTime[] = dateParser(dates, 'both', 'arr');
 
     for (let i = 0; i < qty; i++) {
-      const timeList: DateAndTime[] = dateParser(
-        EventProp.dates,
-        'both',
-        'arr'
-      );
-
-      let tempEvent: Event = {
-        id: getRandom(EventProp.id),
-        name: getRandom(EventProp.name),
-        duration: randomDuration(timeList),
-        venue: getRandom(EventProp.venue),
-        type: getRandom(EventProp.type),
+      let event: Event = {
+        id: getRandom(id),
+        name: getRandom(name),
+        duration: duration.get(timeList),
+        venue: getRandom(venue),
+        type: getRandom(type),
       };
 
-      tempArr.push(tempEvent);
+      tempArr.push(event);
     }
 
     this.data = tempArr;
   }
 
-  get(): any[] | null {
+  public list(): Event[] {
     return this.data;
   }
 }

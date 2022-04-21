@@ -4,5 +4,9 @@ import UserList from './db/usersList.db';
 const events = new EventList();
 const users = new UserList();
 
-console.log(events.get());
-console.log(users.get());
+// init
+events.makeData(10);
+users.makeData(10);
+
+console.log(events.list());
+console.log(users.list());

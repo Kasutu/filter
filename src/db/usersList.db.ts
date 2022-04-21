@@ -1,21 +1,17 @@
 import User from '../interface/user.interface';
 
 import UserData from '../dummyData/user.dummy';
-import getRandom from '../util/functions.util';
 import OrgData from '../dummyData/org.dummy';
+import GetRandom from '../util/getRandom.util';
 
+const { getRandom } = new GetRandom();
 const UserProp = new UserData();
 const OrgProp = new OrgData();
 
 export default class UserList {
-  protected data: User[] | null;
+  protected data: User[] | null = [];
 
-  constructor() {
-    this.data = null;
-    this.makeData(5);
-  }
-
-  protected makeData(qty: number): void {
+  public makeData(qty: number): void {
     const tempArr: User[] = [];
 
     for (let i = 0; i < qty; i++) {
@@ -38,12 +34,11 @@ export default class UserList {
       };
 
       tempArr.push(tempUser);
+      this.data = tempArr;
     }
-
-    this.data = tempArr;
   }
 
-  get(): User[] | null {
+  public list(): any[] | null {
     return this.data;
   }
 }

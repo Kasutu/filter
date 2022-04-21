@@ -1,6 +1,4 @@
-import { parseCommandLine } from 'typescript';
 import EventData from '../dummyData/event.dummy';
-import DateAndTime, { Time } from '../interface/dateAndTime.interface';
 
 const EventProps = new EventData();
 
