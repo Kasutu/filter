@@ -1,26 +1,12 @@
-import EventList from './db/eventList.db';
-import UserList from './db/usersList.db';
-import OrgList from './db/orgList.db';
-import SchoolList from './db/schoolsList.db';
 import filter from './filter';
 import OrgPosition from './enum/orgPosition.enum';
 import { Time } from './interface/dateAndTime.interface';
 import EventData from './dummyData/event.dummy';
 import GetRandom from './util/getRandom.util';
+import { events, users } from './db/dataBase.db';
 
-const events = new EventList();
-const users = new UserList();
-const org = new OrgList();
-const school = new SchoolList();
 const eventData = new EventData();
 const { getRandom } = new GetRandom();
-
-// init
-events.makeData(10);
-
-users.makeData(10);
-org.makeData(15);
-school.makeData(10);
 
 function loginThem(howMany: number, timeArr: Time[]): void {
   for (let i = 0; i < howMany; i++) {
@@ -28,7 +14,8 @@ function loginThem(howMany: number, timeArr: Time[]): void {
       events.list()[1]['id'],
       users.list()[i]['id'],
       'login',
-      getRandom(timeArr)
+      getRandom(timeArr),
+      users.list()
     );
   }
 }
@@ -39,7 +26,8 @@ function logoutThem(howMany: number, timeArr: Time[]): void {
       events.list()[1]['id'],
       users.list()[i]['id'],
       'logout',
-      getRandom(timeArr)
+      getRandom(timeArr),
+      users.list()
     );
   }
 }

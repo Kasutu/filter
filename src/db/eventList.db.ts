@@ -5,17 +5,15 @@ import DateParser from '../util/dateParser.util';
 import DateAndTime, { Time } from '../interface/dateAndTime.interface';
 import GetRandom from '../util/getRandom.util';
 import OrgData from '../dummyData/org.dummy';
-import filter, { query } from '../filter';
-import UserData from '../dummyData/user.dummy';
+import { query } from '../filter';
 import User from '../interface/user.interface';
-import DynamicLoginInfo from '../type/dynamicLoginInfo.type';
+import UserList from './usersList.db';
 
 const { getRandom } = new GetRandom();
 const { dateParser } = new DateParser();
 const duration = new RandomDuration();
 const { id, dates, name, type, venue } = new EventData();
 const { position } = new OrgData();
-const user = new UserData();
 export default class EventList {
   protected data: Event[] = [];
 
@@ -31,7 +29,7 @@ export default class EventList {
         venue: getRandom(venue),
         type: getRandom(type),
         registration: [],
-        exclusivity: getRandom(position),
+        exclusivity: i < qty ? position[i] : null,
       };
 
       tempArr.push(event);
@@ -44,14 +42,35 @@ export default class EventList {
     eventId: Event['id'],
     userId: User['id'],
     activityType: 'login' | 'logout',
-    userTime: Time
+    userTime: Time,
+    users: User[]
   ): void {
+    const currentUser = query(users, 'id', userId);
     const currentEvent = query(this.data, 'id', eventId);
-    if (currentEvent !== undefined) {
+    const eventExclusivity = currentEvent?.exclusivity;
+    const userExclusivity = currentUser?.orgPosition;
+
+    if (currentEvent !== undefined && eventExclusivity === userExclusivity) {
+      console.log(
+        '[INFO] SUCCESS! Matched level: ',
+        eventExclusivity,
+        ' User position: ',
+        userExclusivity
+      );
       console.log('[INFO] SUCCESS! Matched Event ID: ', eventId);
-      currentEvent.registration.push({ [activityType]: userId, ...userTime });
+
+      currentEvent.registration.push({
+        [`${activityType}UID`]: userId,
+        ...userTime,
+      });
     } else {
       console.log('[WARN] FAILED! No Matched Event ID: ', eventId);
+      console.log(
+        '[WARN] FAILED! Even is only for level: ',
+        eventExclusivity,
+        ' User position: ',
+        userExclusivity
+      );
     }
   }
 
