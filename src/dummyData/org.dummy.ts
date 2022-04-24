@@ -1,9 +1,66 @@
 import OrgPosition from '../enum/orgPosition.enum';
 
 export default class OrgData {
-  readonly name: string[] = ['PSSE', 'GDSC'];
-  readonly id: string[] = ['lpoeuKugAz', 'lKhslCEMe2'];
-  readonly position: OrgPosition[] = [
+  readonly name: string[] = [
+    'PSSE',
+    'GDSC',
+    'Frog',
+    'Walk',
+    'InternationalLazarus',
+    'IncThunderstorm',
+    'IncGladstoneBubble',
+    'MixMilo',
+    'GlobalRenew',
+    'WorksBonanza',
+    'WorksFalls',
+    'MixAlpha',
+    'Ray',
+    'SystemsSabreGreen',
+    'Supernova',
+    'IncBoxtop',
+    'IncGreen',
+    'Scientist',
+    'ServicesRed',
+    'Here & Gone',
+    'SystemsOrchidSpot',
+    'TechnologiesRed',
+    'Thrush',
+    'WorksNew',
+    'GruntViva',
+  ];
+  readonly id: string[] = [
+    '6matzVkBcY',
+    '2kBUy52p5l',
+    '5LjXYtmL2l',
+    '9IGtW_Rt1o',
+    'uVuKRvQowb',
+    '3WQNg8pqA3',
+    'peMnPHJhh8',
+    'dIXkeGPHf3',
+    '_c4FOT7dyf',
+    'i_5CsMAafJ',
+    'lu0RPjVS0Y',
+    '_4hRX_h9F0',
+    'c2uaPhhK8r',
+    'Ld1JrK11XN',
+    'Xpt-c9Oe6m',
+    'swkdr6cCPA',
+    'wSKR82j3ag',
+    'dzbTI9pg3H',
+    '6FRX5RseLX',
+    'W8hxjDXa2C',
+    'ShYbVtzWFX',
+    'SIc0SbbKDr',
+    'I5xA-Md5f2',
+    'y-C46pH7z9',
+    '4uKiuqWeHs',
+    'OSLl0UIrDe',
+    'nG9lDqOas0',
+    'LW7jJAYZYK',
+    'oJs5WzSkvN',
+    'IHshoZoEIf',
+  ];
+  readonly position: (OrgPosition | null)[] = [
     OrgPosition.Ambassador,
     OrgPosition.Auditor,
     OrgPosition.Member,
@@ -12,5 +69,6 @@ export default class OrgData {
     OrgPosition.Secretary,
     OrgPosition.VicePresident,
     OrgPosition.treasurer,
+    null,
   ];
 }

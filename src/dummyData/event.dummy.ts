@@ -1,4 +1,6 @@
 import EventType from '../enum/eventType.enum';
+import OrgPosition from '../enum/orgPosition.enum';
+import { Time } from '../interface/dateAndTime.interface';
 
 export default class EventData {
   readonly id: string[] = [
@@ -102,5 +104,58 @@ export default class EventData {
     EventType.ftf,
     EventType.hybrid,
     EventType.virtual,
+  ];
+
+  readonly loginTime: Time[] = [
+    {
+      hours: 9,
+      minutes: 45,
+      suffix: 'am',
+    },
+    {
+      hours: 10,
+      minutes: 2,
+      suffix: 'pm',
+    },
+    {
+      hours: 5,
+      minutes: 1,
+      suffix: 'pm',
+    },
+    {
+      hours: 4,
+      minutes: 50,
+      suffix: 'pm',
+    },
+    {
+      hours: 12,
+      minutes: 30,
+      suffix: 'pm',
+    },
+    {
+      hours: 1,
+      minutes: 20,
+      suffix: 'pm',
+    },
+    {
+      hours: 3,
+      minutes: 30,
+      suffix: 'pm',
+    },
+    {
+      hours: 8,
+      minutes: 55,
+      suffix: 'am',
+    },
+    {
+      hours: 7,
+      minutes: 30,
+      suffix: 'am',
+    },
+    {
+      hours: 2,
+      minutes: 5,
+      suffix: 'am',
+    },
   ];
 }

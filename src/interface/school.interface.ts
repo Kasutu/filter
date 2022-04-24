@@ -1,5 +1,7 @@
-export default interface School<T> {
+import Org from './org.interface';
+
+export default interface School {
   name: string;
   id: string;
-  orgs: T[];
+  orgs: Org[];
 }
