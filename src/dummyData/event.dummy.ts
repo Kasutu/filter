@@ -106,56 +106,22 @@ export default class EventData {
     EventType.virtual,
   ];
 
-  readonly loginTime: Time[] = [
-    {
-      hours: 9,
-      minutes: 45,
-      suffix: 'am',
-    },
-    {
-      hours: 10,
-      minutes: 2,
-      suffix: 'pm',
-    },
-    {
-      hours: 5,
-      minutes: 1,
-      suffix: 'pm',
-    },
-    {
-      hours: 4,
-      minutes: 50,
-      suffix: 'pm',
-    },
-    {
-      hours: 12,
-      minutes: 30,
-      suffix: 'pm',
-    },
-    {
-      hours: 1,
-      minutes: 20,
-      suffix: 'pm',
-    },
-    {
-      hours: 3,
-      minutes: 30,
-      suffix: 'pm',
-    },
-    {
-      hours: 8,
-      minutes: 55,
-      suffix: 'am',
-    },
-    {
-      hours: 7,
-      minutes: 30,
-      suffix: 'am',
-    },
-    {
-      hours: 2,
-      minutes: 5,
-      suffix: 'am',
-    },
+  readonly loginTime: string[] = [
+    '2022-03-04 07:33:pm',
+    '2022-03-11 01:08:am',
+    '2022-03-16 04:36:am',
+    '2022-03-25 06:23:am',
+    '2022-03-28 09:35:pm',
+    '2022-04-01 05:22:pm',
+    '2022-04-18 03:24:pm',
+    '2022-05-10 08:13:am',
+    '2022-05-11 10:39:am',
+    '2022-05-24 06:25:pm',
+    '2022-06-01 06:32:pm',
+    '2022-06-15 12:34:am',
+    '2022-06-21 05:45:am',
+    '2022-07-04 08:14:am',
+    '2022-07-04 05:58:am',
+    '2022-07-12 07:13:pm',
   ];
 }

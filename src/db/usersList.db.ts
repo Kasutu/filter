@@ -27,7 +27,7 @@ export default class UserList {
         email: getRandom(UserProp.email),
         age: getRandom([18, 19, 20, 21, 22]),
         orgId: getRandom(OrgProp.id),
-        orgPosition: i < qty ? OrgProp.position[i] : null,
+        orgPosition: i < qty ? getRandom(OrgProp.position) : null,
       };
 
       tempArr.push(tempUser);

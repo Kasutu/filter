@@ -25,7 +25,7 @@ export default class UserData {
   ];
 
   readonly firstName: string[] = [
-    'Carter',
+    'Jam',
     'Sanford',
     'Enrique',
     'Leopoldo',
@@ -50,7 +50,7 @@ export default class UserData {
   ];
 
   readonly LastName: string[] = [
-    'Morton',
+    'Bonifacio',
     'Barrett',
     'Bradshaw',
     'Chavez',

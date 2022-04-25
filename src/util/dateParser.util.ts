@@ -42,7 +42,7 @@ export default class DateParser {
   ): unknown {
     if (arg2 === 'date') {
       // date
-      if (typeof arg1 === 'string' && arg3 === 'obj') {
+      if (typeof arg1 === 'string' && arg3 === 'obj' && arg3 !== undefined) {
         const dataArr = arg1.split(' ');
         const temp: Date = getData(dataArr, 'date');
         return temp;
@@ -59,7 +59,7 @@ export default class DateParser {
       }
     } else if (arg2 === 'time') {
       // time
-      if (typeof arg1 === 'string' && arg3 === 'obj') {
+      if (typeof arg1 === 'string' && arg3 === 'obj' && arg3 !== undefined) {
         const dataArr = arg1.split(' ');
         const temp: Time = getData(dataArr, 'time');
         return temp;
@@ -76,7 +76,7 @@ export default class DateParser {
       }
     } else if (arg2 === 'both') {
       // date and time
-      if (typeof arg1 === 'string' && arg3 === 'obj') {
+      if (typeof arg1 === 'string' && arg3 === 'obj' && arg3 !== undefined) {
         const dataArr = arg1.split(' ');
         const temp: DateAndTime = getData(dataArr, 'both');
         return temp;

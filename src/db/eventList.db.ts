@@ -5,9 +5,8 @@ import DateParser from '../util/dateParser.util';
 import DateAndTime, { Time } from '../interface/dateAndTime.interface';
 import GetRandom from '../util/getRandom.util';
 import OrgData from '../dummyData/org.dummy';
-import { query } from '../filter';
+import filter, { query } from '../filter';
 import User from '../interface/user.interface';
-import UserList from './usersList.db';
 
 const { getRandom } = new GetRandom();
 const { dateParser } = new DateParser();
@@ -42,7 +41,7 @@ export default class EventList {
     eventId: Event['id'],
     userId: User['id'],
     activityType: 'login' | 'logout',
-    userTime: Time,
+    userTime: number,
     users: User[]
   ): void {
     const currentUser = query(users, 'id', userId);
@@ -59,10 +58,32 @@ export default class EventList {
       );
       console.log('[INFO] SUCCESS! Matched Event ID: ', eventId);
 
-      currentEvent.registration.push({
-        [`${activityType}UID`]: userId,
-        ...userTime,
-      });
+      const loggedInUsr = query(currentEvent.registration, 'UID', userId);
+      const overtime =
+        (loggedInUsr?.loginTime as number) - currentEvent.duration.start;
+
+      if (activityType === 'login') {
+        // regular login
+        currentEvent.registration.push({
+          [`${activityType}Time`]: userTime,
+          UID: userId,
+        });
+      }
+
+      if (
+        loggedInUsr !== undefined &&
+        activityType === 'logout' &&
+        overtime > 15
+      ) {
+        // late
+        currentEvent.registration.push({
+          remark: 'late',
+          [`${activityType}Time`]: userTime,
+          UID: userId,
+        });
+      }
+
+      return;
     } else {
       console.log('[WARN] FAILED! No Matched Event ID: ', eventId);
       console.log(
@@ -71,6 +92,40 @@ export default class EventList {
         ' User position: ',
         userExclusivity
       );
+    }
+  }
+
+  // Filter those who registered late, or left (logged-out) early.
+  // NOTES:
+  // define late - 15 min after the said time
+  //  - greater than 15
+  //  - userTime - event time (output should be greater to trigger 'late')
+  //  - logged out less than the end time triggers 'late'
+  // measure the duration like [ 7am ----------> 10am ]
+  public find(eventId: string, key: 'late' | 'left', userDb: User[]) {
+    // find violators
+    const regArr = query(this.data, 'id', eventId)?.registration;
+
+    if (key === 'late' && regArr !== undefined) {
+      // late
+      const lateUID = query(regArr, 'remark', 'late')?.UID;
+
+      if (lateUID !== undefined) {
+        return filter(userDb, 'id', lateUID);
+      }
+
+      return '[INFO] No late registrations ';
+    } else if (
+      key === 'left' &&
+      regArr !== undefined &&
+      query(regArr, 'remark', 'late') === undefined
+    ) {
+      // no logout
+      console.log('line 118');
+
+      return filter(regArr, 'UID');
+
+      // fix this return a user here
     }
   }
 

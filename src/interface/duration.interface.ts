@@ -1,6 +1,4 @@
-import DateAndTime, { Date, Time } from './dateAndTime.interface';
-
-export default interface Duration {
-  start: DateAndTime;
-  end: DateAndTime;
+export default interface Duration<T> {
+  start: T;
+  end: T;
 }
