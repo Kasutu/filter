@@ -97,10 +97,26 @@ export default function filter<
 }
 
 export function query<T, K extends keyof T, T1 extends T[K]>(
-  arr: T[],
-  key1: K,
-  value: T1
-): T | undefined {
-  // layer 1 obj
-  return arr.find((e) => (e[key1] === value ? e : undefined));
+  arr: Array<T>,
+  key: K,
+  value?: T1
+): Array<T> {
+  console.log('[INFO] Running query', [key, value]);
+
+  let tempArr: Array<T> = [];
+
+  for (let obj of arr) {
+    if (obj[key] === value) {
+      console.log('[INFO] SUCCESS match found! ', [key, value]);
+      tempArr.push(obj);
+    }
+  }
+
+  return tempArr;
+}
+
+export function hunt<T, K extends keyof T>(arr: T[], key: K): T[K][] {
+  console.log('[INFO] Hunting keys...', [key]);
+
+  return arr.map((obj) => obj[key]);
 }

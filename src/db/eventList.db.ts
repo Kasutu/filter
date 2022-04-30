@@ -2,11 +2,12 @@ import Event from '../interface/event.interface';
 import EventData from '../dummyData/event.dummy';
 import RandomDuration from '../util/randomDuration.util';
 import DateParser from '../util/dateParser.util';
-import DateAndTime, { Time } from '../interface/dateAndTime.interface';
+import DateAndTime from '../interface/dateAndTime.interface';
 import GetRandom from '../util/getRandom.util';
 import OrgData from '../dummyData/org.dummy';
-import filter, { query } from '../filter';
+import filter, { hunt, query } from '../filter';
 import User from '../interface/user.interface';
+import loginInfo from '../type/loginInfo.type';
 
 const { getRandom } = new GetRandom();
 const { dateParser } = new DateParser();
@@ -44,54 +45,71 @@ export default class EventList {
     userTime: number,
     users: User[]
   ): void {
-    const currentUser = query(users, 'id', userId);
-    const currentEvent = query(this.data, 'id', eventId);
+    const currentUser = query(users, 'id', userId)[0];
+    const currentEvent = query(this.data, 'id', eventId)[0];
     const eventExclusivity = currentEvent?.exclusivity;
     const userExclusivity = currentUser?.orgPosition;
 
-    if (currentEvent !== undefined && eventExclusivity === userExclusivity) {
+    if (
+      currentUser !== undefined &&
+      currentEvent !== undefined &&
+      eventExclusivity === userExclusivity
+    ) {
       console.log(
         '[INFO] SUCCESS! Matched level: ',
         eventExclusivity,
         ' User position: ',
-        userExclusivity
+        userExclusivity,
+        'Matched Event ID: ',
+        eventId
       );
-      console.log('[INFO] SUCCESS! Matched Event ID: ', eventId);
-
-      const loggedInUsr = query(currentEvent.registration, 'UID', userId);
-      const overtime =
-        (loggedInUsr?.loginTime as number) - currentEvent.duration.start;
 
       if (activityType === 'login') {
         // regular login
-        currentEvent.registration.push({
-          [`${activityType}Time`]: userTime,
+        let user: loginInfo = {
           UID: userId,
-        });
-      }
+          login: true,
+          logout: false,
+          late: false,
+          loginTime: userTime,
+          logoutTime: 0,
+        };
 
-      if (
-        loggedInUsr !== undefined &&
-        activityType === 'logout' &&
-        overtime > 15
-      ) {
         // late
-        currentEvent.registration.push({
-          remark: 'late',
-          [`${activityType}Time`]: userTime,
-          UID: userId,
-        });
+        const overtime = user.loginTime - currentEvent?.duration['start'];
+        console.log(['overtime', overtime]);
+
+        if (overtime > 15) {
+          user.loginTime = userTime;
+          user.late = true;
+        }
+
+        currentEvent.registration.push(user);
       }
 
-      return;
+      if (activityType === 'logout') {
+        const loggedInUsr = query(
+          currentEvent['registration'],
+          'UID',
+          userId
+        )[0];
+
+        if (loggedInUsr !== undefined) {
+          loggedInUsr.logout = true;
+          loggedInUsr.logoutTime = userTime;
+        }
+      }
     } else {
-      console.log('[WARN] FAILED! No Matched Event ID: ', eventId);
-      console.log(
-        '[WARN] FAILED! Even is only for level: ',
-        eventExclusivity,
-        ' User position: ',
-        userExclusivity
-      );
+      if (currentUser === undefined && currentEvent === undefined) {
+        console.log('[WARN] FAILED! No Matched Event ID: ', eventId);
+      } else if (eventExclusivity === userExclusivity) {
+        console.log(
+          '[WARN] FAILED! Even is only for level: ',
+          eventExclusivity,
+          ' User position: ',
+          userExclusivity
+        );
+      }
     }
   }
 
@@ -102,31 +120,45 @@ export default class EventList {
   //  - userTime - event time (output should be greater to trigger 'late')
   //  - logged out less than the end time triggers 'late'
   // measure the duration like [ 7am ----------> 10am ]
+
+  // objects with login time
+
   public find(eventId: string, key: 'late' | 'left', userDb: User[]) {
     // find violators
-    const regArr = query(this.data, 'id', eventId)?.registration;
+    const matchedEvents = query(this.data, 'id', eventId);
+    const regArr = hunt(matchedEvents, 'registration');
+    let tempArr;
 
-    if (key === 'late' && regArr !== undefined) {
-      // late
-      const lateUID = query(regArr, 'remark', 'late')?.UID;
+    regArr.forEach((LoginInfoArr) => {
+      if (key === 'late' && LoginInfoArr[0] !== undefined) {
+        console.log('[INFO] Finding ', [key]);
+        // late find late === true in the event list and return the user
+        const lateUser = query(LoginInfoArr, 'late', true);
 
-      if (lateUID !== undefined) {
-        return filter(userDb, 'id', lateUID);
+        if (lateUser[0] !== undefined) {
+          lateUser.forEach((user) => {
+            tempArr = query(userDb, 'id', user.UID);
+          });
+        } else {
+          console.log('[INFO] No late registrations ');
+        }
+      } else if (key === 'left' && LoginInfoArr[0] !== undefined) {
+        console.log('[INFO] Finding ', [key]);
+        // no logout
+
+        const leftUser = query(LoginInfoArr, 'logout', false);
+
+        if (leftUser[0] !== undefined) {
+          leftUser.forEach((user) => {
+            tempArr = query(userDb, 'id', user.UID);
+          });
+        } else {
+          console.log('[INFO] No Left participants ');
+        }
       }
+    });
 
-      return '[INFO] No late registrations ';
-    } else if (
-      key === 'left' &&
-      regArr !== undefined &&
-      query(regArr, 'remark', 'late') === undefined
-    ) {
-      // no logout
-      console.log('line 118');
-
-      return filter(regArr, 'UID');
-
-      // fix this return a user here
-    }
+    return tempArr;
   }
 
   public list(): Event[] {

@@ -15,7 +15,7 @@ function loginThem(howMany: number, timeArr: DateAndTime[]): void {
   for (let i = 0; i < howMany; i++) {
     events.register(
       events.list()[1]['id'],
-      users.list()[i + 1]['id'],
+      users.list()[i]['id'],
       'login',
       convert12hrTime(getRandom(timeArr)),
       users.list()
@@ -38,6 +38,15 @@ function logoutThem(howMany: number, timeArr: DateAndTime[]): void {
 const dates = dateParser(eventData.loginTime, 'both', 'arr');
 
 loginThem(5, dates);
+
+events.register(
+  events.list()[1]['id'],
+  users.list()[6]['id'],
+  'login',
+  convert12hrTime(getRandom(dates)),
+  users.list()
+);
+
 logoutThem(5, dates);
 
 // console.log(events.list());
@@ -71,5 +80,7 @@ console.log(event1);
 // set to obj
 // then evaluate
 
-console.log(events.find('bpuVGbn2wW', 'late', users.list()));
-console.log(events.find('bpuVGbn2wW', 'left', users.list()));
+const late = events.find('bpuVGbn2wW', 'late', users.list());
+const left = events.find('bpuVGbn2wW', 'left', users.list());
+
+console.log(late, left);

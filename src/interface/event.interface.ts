@@ -1,6 +1,6 @@
 import EventType from '../enum/eventType.enum';
 import OrgPosition from '../enum/orgPosition.enum';
-import DynamicLoginInfo from '../type/dynamicLoginInfo.type';
+import DynamicLoginInfo from '../type/loginInfo.type';
 export default interface Event {
   id: string;
   name: string;
