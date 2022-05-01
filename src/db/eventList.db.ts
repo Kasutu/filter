@@ -5,9 +5,10 @@ import DateParser from '../util/dateParser.util';
 import DateAndTime from '../interface/dateAndTime.interface';
 import GetRandom from '../util/getRandom.util';
 import OrgData from '../dummyData/org.dummy';
-import filter, { hunt, query } from '../filter';
+import { hunt, query } from '../filter';
 import User from '../interface/user.interface';
 import loginInfo from '../type/loginInfo.type';
+import DateTime24h from '../type/dateTime24h.type';
 
 const { getRandom } = new GetRandom();
 const { dateParser } = new DateParser();
@@ -42,7 +43,7 @@ export default class EventList {
     eventId: Event['id'],
     userId: User['id'],
     activityType: 'login' | 'logout',
-    userTime: number,
+    userTime: DateTime24h,
     users: User[]
   ): void {
     const currentUser = query(users, 'id', userId)[0];
@@ -72,19 +73,22 @@ export default class EventList {
           logout: false,
           late: false,
           loginTime: userTime,
-          logoutTime: 0,
+          logoutTime: undefined,
         };
 
         // late
-        const overtime = user.loginTime - currentEvent?.duration['start'];
-        console.log(['overtime', overtime]);
+        if (user.loginTime !== undefined && currentEvent !== undefined) {
+          const overtime =
+            user.loginTime.minutes - currentEvent.duration.start.minutes;
 
-        if (overtime > 15) {
-          user.loginTime = userTime;
-          user.late = true;
+          if (overtime > 15) {
+            console.log('[INFO] Overtime', [overtime]);
+            user.loginTime = userTime;
+            user.late = true;
+          }
+
+          currentEvent.registration.push(user);
         }
-
-        currentEvent.registration.push(user);
       }
 
       if (activityType === 'logout') {

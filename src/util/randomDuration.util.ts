@@ -1,23 +1,27 @@
 import DateAndTime from '../interface/dateAndTime.interface';
-import Duration from '../interface/duration.interface';
 import GetRandom from './getRandom.util';
-import convert12hrTime from './timeConvert.util';
+import { convert12hrTimeObj } from './timeConvert.util';
+import DateTime24h from '../type/dateTime24h.type';
 
 const { getRandom } = new GetRandom();
 export default class RandomDuration {
   public get(list: DateAndTime[]): {
-    start: number;
-    end: number;
+    start: DateTime24h;
+    end: DateTime24h;
   } {
-    let start;
-    let end;
+    let start: DateTime24h;
+    let end: DateTime24h;
 
     // select random time obj
-    start = convert12hrTime(getRandom(list));
-    end = convert12hrTime(getRandom(list));
+    start = convert12hrTimeObj(getRandom(list));
+    end = convert12hrTimeObj(getRandom(list));
 
-    if (end < start) {
-      end = convert12hrTime(getRandom(list));
+    if (
+      (end['day'] === start['day'] && end['month'] === start['month']) ||
+      (start['day'] > end['day'] && start['month'] > end['month']) ||
+      end['newHr'] > start['newHr']
+    ) {
+      end = convert12hrTimeObj(getRandom(list));
     }
 
     return {

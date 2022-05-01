@@ -5,7 +5,7 @@ import EventData from './dummyData/event.dummy';
 import GetRandom from './util/getRandom.util';
 import { events, users } from './db/dataBase.db';
 import DateParser from './util/dateParser.util';
-import convert12hrTime from './util/timeConvert.util';
+import convert12hrTime, { convert12hrTimeObj } from './util/timeConvert.util';
 
 const { dateParser } = new DateParser();
 const eventData = new EventData();
@@ -17,7 +17,7 @@ function loginThem(howMany: number, timeArr: DateAndTime[]): void {
       events.list()[1]['id'],
       users.list()[i]['id'],
       'login',
-      convert12hrTime(getRandom(timeArr)),
+      convert12hrTimeObj(getRandom(timeArr)),
       users.list()
     );
   }
@@ -29,7 +29,7 @@ function logoutThem(howMany: number, timeArr: DateAndTime[]): void {
       events.list()[1]['id'],
       users.list()[i]['id'],
       'logout',
-      convert12hrTime(getRandom(timeArr)),
+      convert12hrTimeObj(getRandom(timeArr)),
       users.list()
     );
   }
@@ -43,7 +43,7 @@ events.register(
   events.list()[1]['id'],
   users.list()[6]['id'],
   'login',
-  convert12hrTime(getRandom(dates)),
+  convert12hrTimeObj(getRandom(dates)),
   users.list()
 );
 
@@ -83,4 +83,4 @@ console.log(event1);
 const late = events.find('bpuVGbn2wW', 'late', users.list());
 const left = events.find('bpuVGbn2wW', 'left', users.list());
 
-console.log(late, left);
+console.log('Late', late, 'left', left);
