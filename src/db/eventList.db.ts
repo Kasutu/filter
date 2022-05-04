@@ -5,7 +5,7 @@ import DateParser from '../util/dateParser.util';
 import DateAndTime from '../interface/dateAndTime.interface';
 import GetRandom from '../util/getRandom.util';
 import OrgData from '../dummyData/org.dummy';
-import { hunt, query } from '../filter';
+import { hunt, query } from '../Filter';
 import User from '../interface/user.interface';
 import loginInfo from '../type/loginInfo.type';
 import DateTime24h from '../type/dateTime24h.type';
@@ -37,6 +37,10 @@ export default class EventList {
     }
 
     this.data = tempArr;
+  }
+
+  public list(): Event[] {
+    return this.data;
   }
 
   public register(
@@ -127,17 +131,21 @@ export default class EventList {
 
   // objects with login time
 
-  public find(eventId: string, key: 'late' | 'left', userDb: User[]) {
+  public findViolators(
+    eventId: string,
+    key: 'late' | 'left',
+    userDb: User[]
+  ): User[] {
     // find violators
     const matchedEvents = query(this.data, 'id', eventId);
     const regArr = hunt(matchedEvents, 'registration');
-    let tempArr;
+    let tempArr: User[] = [];
 
     regArr.forEach((LoginInfoArr) => {
       if (key === 'late' && LoginInfoArr[0] !== undefined) {
         console.log('[INFO] Finding ', [key]);
         // late find late === true in the event list and return the user
-        const lateUser = query(LoginInfoArr, 'late', true);
+        const lateUser: loginInfo[] = query(LoginInfoArr, 'late', true);
 
         if (lateUser[0] !== undefined) {
           lateUser.forEach((user) => {
@@ -163,9 +171,5 @@ export default class EventList {
     });
 
     return tempArr;
-  }
-
-  public list(): Event[] {
-    return this.data;
   }
 }

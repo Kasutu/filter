@@ -1,3 +1,6 @@
+import Event from './interface/event.interface';
+import DateTime24h from './type/dateTime24h.type';
+
 export default function filter<
   T0,
   K0 extends keyof T0,
@@ -119,4 +122,52 @@ export function hunt<T, K extends keyof T>(arr: T[], key: K): T[K][] {
   console.log('[INFO] Hunting keys...', [key]);
 
   return arr.map((obj) => obj[key]);
+}
+
+export function displayUpcomingEvents(
+  events: Event[],
+  currentDateAndTime: DateTime24h,
+  options?: 'recent'
+) {
+  // finds all event durations if 'upcoming' or 'recent'
+  // if so return the event object in arr
+  /*
+- We can get upcoming events (defined as events that are to happen in 1 week or less).
+ - How about recent events, those that happened in the past week?
+*/
+
+  const eventArr: Event[] = events;
+  const filteredEventArr: Event[] = [];
+  const { year, month, day, newHr, minutes } = currentDateAndTime;
+
+  eventArr.forEach((event) => {
+    const start: DateTime24h = event.duration.start;
+    const end: DateTime24h = event.duration.end;
+
+    if (options !== 'recent') {
+      // find upcoming events
+      if (
+        start.year >= year &&
+        start.month >= month &&
+        start.day >= day &&
+        start.newHr > newHr &&
+        start.minutes > minutes
+      ) {
+        filteredEventArr.push(event);
+      }
+    } else {
+      // find upcoming events
+      if (
+        start.year <= year &&
+        start.month <= month &&
+        start.day <= day &&
+        start.newHr < newHr &&
+        start.minutes < minutes
+      ) {
+        filteredEventArr.push(event);
+      }
+    }
+  });
+
+  return filteredEventArr;
 }

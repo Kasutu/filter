@@ -1,11 +1,12 @@
-import filter from './filter';
+import { displayUpcomingEvents } from './Filter';
 import OrgPosition from './enum/orgPosition.enum';
 import DateAndTime, { Time } from './interface/dateAndTime.interface';
 import EventData from './dummyData/event.dummy';
 import GetRandom from './util/getRandom.util';
-import { events, users } from './db/dataBase.db';
+import { events, users, school } from './db/dataBase.db';
 import DateParser from './util/dateParser.util';
 import convert12hrTime, { convert12hrTimeObj } from './util/timeConvert.util';
+import SchoolList from './db/schoolsList.db';
 
 const { dateParser } = new DateParser();
 const eventData = new EventData();
@@ -52,7 +53,7 @@ logoutThem(5, dates);
 // console.log(events.list());
 // console.log(users.list());
 // console.log(org.list());
-// console.log(school.list());
+console.log('school', school.list());
 
 console.log(['INFO'], ['Running Filter...']);
 let event1 = events.list()[1];
@@ -80,7 +81,22 @@ console.log(event1);
 // set to obj
 // then evaluate
 
-const late = events.find('bpuVGbn2wW', 'late', users.list());
-const left = events.find('bpuVGbn2wW', 'left', users.list());
+const late = events.findViolators('bpuVGbn2wW', 'late', users.list());
+const left = events.findViolators('bpuVGbn2wW', 'left', users.list());
 
 console.log('Late', late, 'left', left);
+
+let currentTime = convert12hrTimeObj(dates[0]);
+
+// console.log(
+//   'Upcoming Events list',
+//   displayUpcomingEvents(events.list(), currentTime)
+// );
+
+// console.log(
+//   'Recent Events list',
+//   displayUpcomingEvents(events.list(), currentTime, 'recent')
+// );
+
+school.getAllUpcomingEvents(currentTime);
+school.getAllUpcomingEvents(currentTime, 'recent');
